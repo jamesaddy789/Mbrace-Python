@@ -1,7 +1,7 @@
 '''
 Created on Aug 18, 2019
 
-@author: James Curtis Addy
+@author: Curtis
 '''
 
 import ftplib
@@ -136,11 +136,13 @@ def create_composites(acceptable_days_apart):
     main_path = get_main_directory_path()
     composite_path_list = []
     for directory in composite_dir_list:
-        if not os.path.isdir(directory): continue
         path = main_path + '/' + directory
+        if not os.path.isdir(path): continue       
         composite_path_list.append(path)
         
+        
     for path in composite_path_list:
+        
         #create a sorted dictionary where keys are the date
         #and values are the filenames
         file_list = os.listdir(path) 
@@ -168,7 +170,7 @@ def create_composites(acceptable_days_apart):
         for date in sorted_date_list:
             time_diff = date - current_date
             current_date = date
-            if time_diff.days < acceptable_days_apart:
+            if time_diff.days <= acceptable_days_apart:
                 date_group_list[date_group_index].append(date)
             else:
                 date_group_index = date_group_index + 1
@@ -177,7 +179,7 @@ def create_composites(acceptable_days_apart):
         mac_address_safe = get_mac_address_safe(file_list[0])
         date_string_format = '%Y-%m-%d'
         for group in date_group_list:
-            print('Creating composites for ' + mac_address_safe + '..')
+            print('Compositing for ' + mac_address_safe + '..')
             start_date = group[0].strftime(date_string_format)
             end_date = group[-1].strftime(date_string_format)
             group_file_name = mac_address_safe + "_Composite_" + start_date + '_to_' + end_date
@@ -185,7 +187,7 @@ def create_composites(acceptable_days_apart):
             
            
             group_file = open(group_file_path, 'ab+')
-            print('Created composite for ' + group_file_name)
+            print(' Combining data for ' + group_file_name)
             for date in group:
                 print('    adding data from ' + file_date_dict[date])
                 file_to_copy_path = path + "/" + file_date_dict[date]
@@ -194,18 +196,8 @@ def create_composites(acceptable_days_apart):
                 file_to_copy.close()
             group_file.close()
             print('Completed!')
-    print('Composite creation complete! Files were composited if they they are within ' + str(acceptable_days_apart) + ' days apart')
-
-    
+    print('Composite creation complete! Files were composited if they they are within ' + str(acceptable_days_apart) + ' day(s) apart.')
+           
 if __name__ == "__main__":
     collect_data_from_server()
-    acceptable_days_apart = 7
-    if len(sys.argv) > 1:
-        try:
-            acceptable_days_apart = int(sys.argv[1])
-        except ValueError:
-            print('Argument for acceptable days needs to be an integer. Using default value of ' + str(acceptable_days_apart))
-    create_composites(acceptable_days_apart)
-           
-    
-
+    create_composites(1)
