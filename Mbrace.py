@@ -25,7 +25,6 @@ class Mbrace_Data:
         sequence_lengths = [regex_start_indices[i + 1] - regex_start_indices[i] for i in range(0,len(regex_start_indices)-1)]
         sequence_lengths.append(len(byte_array) - regex_start_indices[len(regex_start_indices) - 1])
         expected_sequence_length = stats.mode(sequence_lengths)[0][0]
-
         #Create a list of indices that are the expected length apart
         sequence_start_indices = []
         for i in range(0, len(sequence_lengths)):
@@ -60,9 +59,13 @@ class Mbrace_Data:
             self.Timestamps[i, 0] = combined
         
         #Set up sensor reading matrices
-        sensor_readings = np_matrix[:, 8:end]
+        sensor_readings = np_matrix[:, 8:end]     
         sensor_count = int(sensor_readings.shape[1]/10)      
-        sensor_readings = sensor_readings.reshape(row_count*10, sensor_count)
+        try:
+            sensor_readings = sensor_readings.reshape(row_count*10, sensor_count)
+        except(ValueError):
+            print("Error reshaping values for " + filename)
+            return
         #Average the sensor data 10 times
         times_averaged = 10
         averaged_row_count = int(sensor_readings.shape[0] / times_averaged)
