@@ -29,15 +29,15 @@ def list_all():
         
 def operate_file_download():
     file_to_download = input("\nCopy and paste name of file to download :")
-    local_name = file_to_download.replace(':', '_')
-    print("Downloaded " + file_to_download + " to: \n" + local_name)
+    local_name = file_to_download.replace(':', '_')    
     local_file = open(local_name, 'wb')
     ftp = mbrace_ftp_connect()
     if ftp != None:
         ftp.retrbinary("RETR " + file_to_download ,local_file.write)
         local_file.close()
         ftp.quit()
-       
+    print("Downloaded " + file_to_download + " to: \n" + local_name)
+    
 while True:
     list_all()
     operate_file_download()   
