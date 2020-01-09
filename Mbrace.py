@@ -1,6 +1,7 @@
 import numpy as np
 from scipy import stats
 import re
+import os
 
 class Mbrace_Data:
     Server_Timestamps = None
@@ -9,6 +10,10 @@ class Mbrace_Data:
     Temperature_Readings = None
     
     def __init__(self, filename, is_server_file = True):
+        if not os.path.isfile(filename):
+            print(filename + " doesn't exist")
+            return
+        
         #Collect the bytes of data from the bin files
         byte_array = []
         with open(filename, 'rb') as d:
@@ -24,6 +29,10 @@ class Mbrace_Data:
         for m in regex_match_list:
             regex_start_indices.append(m.span()[0])
 
+        #Check if no regular expressions were found.
+        if len(regex_start_indices) <= 0:
+            print("No valid data sequences were found in file.")
+            return
 
         #Get the most frequently occuring sequence length.
         sequence_lengths = [regex_start_indices[i + 1] - regex_start_indices[i] for i in range(0,len(regex_start_indices)-1)]

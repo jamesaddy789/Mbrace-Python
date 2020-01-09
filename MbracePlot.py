@@ -26,12 +26,16 @@ def list_all_data_files(directory_name):
 
 def run_plot_program(directory_name):
     #Get data from user specified file
-    filename = input("\nCopy and paste the file to plot : ")
+    filename = input("\nCopy and paste the file to plot :")
 
     file_date_string = re.findall(r"\d{4}-\d{2}-\d{2}", filename)[0]
     file_datetime = datetime.datetime.strptime(file_date_string, '%Y-%m-%d')
     mb_data = Mbrace.Mbrace_Data(os.path.join(directory_name,filename))
 
+    if mb_data.Server_Timestamps is None or mb_data.Gape_Readings is None:
+        print("There is no valid data to plot.")
+        return
+    
     #Get server timestamps in seconds
     server_timestamps = mb_data.Server_Timestamps
     hour_to_seconds = server_timestamps[:, 0] * 3600.0
@@ -93,8 +97,10 @@ while True:
     dir_list = [i for i in os.listdir(".") if not i in ignore_list and os.path.isdir(i)]
     for dir in dir_list:
         print(dir)
-
-    print("\nEnter the path the data files are in.\nCan copy and paste from the above list or enter . to select current directory.")
+    print("\nEnter the path the data files are in.")
+    print("You can copy and paste from the above list,")
+    print("enter . to select current directory,")
+    print("or enter another path.")
     directory_name = input("Enter path :")    
     count = list_all_data_files(directory_name)
     if count > 0:

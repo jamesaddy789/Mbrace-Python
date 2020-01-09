@@ -5,12 +5,12 @@ If python isn't already installed on the machine,
 install the recent version for the machine's operating system at:
 python.org/downloads
 
-Pip should install with the current version of python 
+Pip should install with the current version of python, 
 but if for some reason pip isn't installed yet, 
 follow the instructions at:
 Pypi.org/project/pip
 
-In Windows, MacOS, and Linux command shell install necessary libraries using:
+In Windows, MacOS, or Linux command shell install necessary libraries using:
 python -m pip install --user numpy scipy matplotlib
 
 Or if multiple versions of python are installed:
